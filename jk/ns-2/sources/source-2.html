@@ -1,0 +1,309 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Faculty</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example</a>
+</div>
+
+<h1>Coverage Summary for Class: Faculty (org.example)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Faculty</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.9%
+  </span>
+  <span class="absValue">
+    (131/138)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example;
+&nbsp;
+&nbsp;import java.io.*;
+&nbsp;import java.sql.Connection;
+&nbsp;import java.sql.DriverManager;
+&nbsp;import java.sql.*;
+&nbsp;import java.util.Scanner;
+&nbsp;
+<b class="fc">&nbsp;public class Faculty {</b>
+<b class="fc">&nbsp;    static Scanner sc= new Scanner(System.in);</b>
+<b class="fc">&nbsp;    static Statement stmt=null;</b>
+&nbsp;    static String instructor_id;
+&nbsp;    public static void auth() throws Exception {
+<b class="fc">&nbsp;        Class.forName(&quot;org.postgresql.Driver&quot;);</b>
+<b class="fc">&nbsp;        Connection cn = DriverManager.getConnection(&quot;jdbc:postgresql://localhost:5432/db1&quot;,&quot;postgres&quot;,&quot;12345&quot;);</b>
+<b class="fc">&nbsp;        stmt = cn.createStatement();</b>
+&nbsp;
+<b class="fc">&nbsp;        System.out.println(&quot;Enter username:&quot;);</b>
+<b class="fc">&nbsp;        instructor_id = sc.nextLine();</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Enter password:&quot;);</b>
+<b class="fc">&nbsp;        String pwd = sc.nextLine();</b>
+<b class="fc">&nbsp;        String query = String.format(&quot;select * from facultyRecord where instructor_id=&#39;%s&#39;;&quot;,instructor_id);</b>
+<b class="fc">&nbsp;        ResultSet rs = stmt.executeQuery(query);</b>
+<b class="fc">&nbsp;        rs.next();</b>
+<b class="fc">&nbsp;        int a = rs.getRow();</b>
+<b class="fc">&nbsp;        if (a==0){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Incorrect UserName!&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        String password = rs.getString(&quot;password&quot;);</b>
+<b class="fc">&nbsp;        if(pwd.equals(password)){</b>
+<b class="fc">&nbsp;            Dashboard();</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="fc">&nbsp;            System.out.println(&quot;Password is Incorrect!&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;    }
+&nbsp;    public static void Dashboard() throws Exception {
+&nbsp;
+&nbsp;        while(true){
+<b class="fc">&nbsp;            Faculty f = new Faculty();</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Enter &#39;A&#39; for  Offering a course&quot;);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Enter &#39;B&#39; to Drop a course&quot;);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Enter &#39;C&#39; to Upload Marks of Student&quot;);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Enter &#39;D&#39; to see Details of Student&quot;);</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Enter &#39;E&#39; to go back&quot;);</b>
+<b class="fc">&nbsp;            String input =sc.nextLine();</b>
+<b class="fc">&nbsp;            if(input.equals(&quot;A&quot;)){</b>
+<b class="fc">&nbsp;                Offer();</b>
+<b class="fc">&nbsp;            } else if (input.equals(&quot;B&quot;)) {</b>
+<b class="fc">&nbsp;                DropCourse();</b>
+<b class="fc">&nbsp;            } else if (input.equals(&quot;C&quot;)) {</b>
+<b class="fc">&nbsp;                UploadMarks();</b>
+<b class="fc">&nbsp;            } else if (input.equals(&quot;D&quot;)) {</b>
+<b class="fc">&nbsp;                StudentDetail();</b>
+<b class="fc">&nbsp;            } else if (input.equals(&quot;E&quot;)) {</b>
+&nbsp;                return;
+&nbsp;            }else{
+<b class="fc">&nbsp;                System.out.println(&quot;Enter a valid input&quot;);</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;    public static void Offer() throws SQLException {
+<b class="fc">&nbsp;        System.out.println(&quot;Enter CourseCode:&quot;);</b>
+<b class="fc">&nbsp;        String course_id = sc.nextLine();</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Enter cgpa criteria if not type NA:&quot;);</b>
+<b class="fc">&nbsp;        String cgpa = sc.nextLine();//enter cgpa</b>
+<b class="fc">&nbsp;        String query=&quot;select * from running_Semiyearly;&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;        ResultSet rs = stmt.executeQuery(query);</b>
+<b class="fc">&nbsp;        rs.next();</b>
+<b class="fc">&nbsp;        String sem = rs.getString(&quot;curr_sem&quot;);</b>
+<b class="fc">&nbsp;        String year = rs.getString(&quot;curr_year&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        String q2=String.format(&quot;select * from float_course where course_id=&#39;%s&#39; and sem=&#39;%s&#39; and curr_year=&#39;%s&#39;;&quot;,course_id,sem,year);</b>
+<b class="fc">&nbsp;        ResultSet rs1 = stmt.executeQuery(q2);</b>
+<b class="fc">&nbsp;        rs1.next();</b>
+<b class="fc">&nbsp;        int a = rs1.getRow();</b>
+<b class="fc">&nbsp;        if(a!=0)</b>
+&nbsp;        {
+<b class="fc">&nbsp;            System.out.println(&quot;Course is already floated either by you or other faculty&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        String q4 =String.format(&quot;select * from course_catalog where course_id=&#39;%s&#39;;&quot;,course_id);</b>
+<b class="fc">&nbsp;        ResultSet rs3 = stmt.executeQuery(q4);</b>
+<b class="fc">&nbsp;        rs3.next();</b>
+<b class="fc">&nbsp;        if(rs3.getRow()==0)</b>
+&nbsp;        {
+<b class="fc">&nbsp;            System.out.println(&quot;Course is not present in course catalog!&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        String Prereq=rs3.getString(&quot;prerequisite&quot;);</b>
+<b class="fc">&nbsp;        String Credit = rs3.getString(&quot;credit&quot;);</b>
+<b class="fc">&nbsp;        String ltp = rs3.getString(&quot;L_T_P&quot;);</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        String q3 = String.format(&quot;insert into float_course values(&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;,&#39;%s&#39;);&quot;,course_id,instructor_id,cgpa,Prereq,sem,year,Credit,ltp);</b>
+<b class="fc">&nbsp;        stmt.executeUpdate(q3);</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Course is Added Successfully!&quot;);</b>
+&nbsp;
+&nbsp;
+&nbsp;    }
+&nbsp;    public static void DropCourse() throws SQLException {
+<b class="fc">&nbsp;        System.out.println(&quot;Enter course ID you want to drop:&quot;);</b>
+<b class="fc">&nbsp;        String course_id = sc.nextLine();</b>
+<b class="fc">&nbsp;        String query=&quot;select * from running_Semiyearly&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;        ResultSet rs = stmt.executeQuery(query);</b>
+<b class="fc">&nbsp;        rs.next();</b>
+<b class="fc">&nbsp;        String sem = rs.getString(&quot;curr_sem&quot;);</b>
+<b class="fc">&nbsp;        String year = rs.getString(&quot;curr_year&quot;);</b>
+<b class="fc">&nbsp;        String q1 = String.format(&quot;select * from float_course where course_id =&#39;%s&#39; and instructor_id =&#39;%s&#39; and sem=&#39;%s&#39; and curr_year=&#39;%s&#39;;&quot;,course_id,instructor_id,sem,year);</b>
+<b class="fc">&nbsp;        ResultSet rs1 = stmt.executeQuery(q1);</b>
+<b class="fc">&nbsp;        rs1.next();</b>
+<b class="fc">&nbsp;        int a = rs1.getRow();</b>
+<b class="fc">&nbsp;        if(a==0){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;There is not such course floated by you!&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;            String q2 = String.format(&quot;delete from float_course where course_id =&#39;%s&#39; and instructor_id =&#39;%s&#39; and sem=&#39;%s&#39; and curr_year=&#39;%s&#39;;&quot;,course_id,instructor_id,sem,year);</b>
+<b class="fc">&nbsp;            stmt.executeUpdate(q2);</b>
+<b class="fc">&nbsp;            String q3 = String.format(&quot;delete from Enroll where course_id=&#39;%s&#39; and instructor_id =&#39;%s&#39; and sem=&#39;%s&#39; and curr_year=&#39;%s&#39;;&quot;,course_id,instructor_id,sem,year);</b>
+<b class="fc">&nbsp;            stmt.executeUpdate(q3);</b>
+&nbsp;
+<b class="fc">&nbsp;        System.out.println(&quot;Course Droped Successfully!&quot;);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;    public static void UploadMarks() throws SQLException {
+<b class="fc">&nbsp;        System.out.println(&quot;Enter the Course ID:&quot;);</b>
+<b class="fc">&nbsp;        String course_id = sc.nextLine();</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Enter semester:&quot;);</b>
+<b class="fc">&nbsp;        String semi = sc.nextLine();</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Enter year:&quot;);</b>
+<b class="fc">&nbsp;        String year = sc.nextLine();</b>
+<b class="fc">&nbsp;        String query=&quot;select * from running_Semiyearly&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;        ResultSet rs = stmt.executeQuery(query);</b>
+<b class="fc">&nbsp;        rs.next();</b>
+<b class="fc">&nbsp;        String sem = rs.getString(&quot;curr_sem&quot;);</b>
+<b class="fc">&nbsp;        String curr_year = rs.getString(&quot;curr_year&quot;);</b>
+<b class="fc">&nbsp;        if(sem.equals(semi) &amp;&amp; year.equals(curr_year)){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;This Course is not applicable for upload marks&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        String q1=String.format(&quot;select * from float_course where course_id =&#39;%s&#39; and instructor_id=&#39;%s&#39; and (sem =&#39;%s&#39; and curr_year =&#39;%s&#39;);&quot;,course_id,instructor_id,semi,year);</b>
+<b class="fc">&nbsp;        ResultSet r1 = stmt.executeQuery(q1);</b>
+<b class="fc">&nbsp;        r1.next();</b>
+<b class="fc">&nbsp;        int a = r1.getRow();</b>
+<b class="fc">&nbsp;        if(a==0){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;There is no such course available for uploading marks or offer by you in that sem!&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        System.out.println(&quot;Enter File Address:&quot;);</b>
+<b class="fc">&nbsp;        String csvFile=sc.nextLine();</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            File file = new File(csvFile);</b>
+<b class="fc">&nbsp;            FileReader fr = new FileReader(file);</b>
+<b class="fc">&nbsp;            BufferedReader br = new BufferedReader(fr);</b>
+<b class="fc">&nbsp;            String line = &quot;&quot;;</b>
+&nbsp;            String[] tempArr;
+<b class="fc">&nbsp;            while((line = br.readLine()) != null) {</b>
+<b class="fc">&nbsp;                tempArr = line.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;                for(String tempStr : tempArr) {</b>
+<b class="fc">&nbsp;                    String q3= String.format(&quot;UPDATE Enroll SET grade=&#39;%s&#39; WHERE student_id=&#39;%s&#39; and course_id=&#39;%s&#39; and instructor_id=&#39;%s&#39; and sem=&#39;%s&#39; and curr_year=&#39;%s&#39;;&quot;,tempArr[1],tempArr[0],course_id,instructor_id,semi,year);</b>
+<b class="fc">&nbsp;                    stmt.executeUpdate(q3);</b>
+&nbsp;                }
+<b class="fc">&nbsp;                System.out.println();</b>
+&nbsp;            }
+<b class="fc">&nbsp;            br.close();</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            System.out.println(e);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        System.out.println(&quot;Successfully Update!&quot;);</b>
+&nbsp;        return;
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void StudentDetail() throws SQLException {
+<b class="fc">&nbsp;        System.out.println(&quot;Enter Student ID:&quot;);</b>
+<b class="fc">&nbsp;        String student_id = sc.nextLine();</b>
+<b class="fc">&nbsp;        String query =String.format(&quot;select * from StudentRecord where student_id = &#39;%s&#39;;&quot;,student_id);</b>
+<b class="fc">&nbsp;        ResultSet rs=stmt.executeQuery(query);</b>
+<b class="fc">&nbsp;        rs.next();</b>
+<b class="fc">&nbsp;        int a = rs.getRow();</b>
+<b class="fc">&nbsp;        if(a==0){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Invalid Student ID!&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        String q2 = String.format(&quot;select * from Enroll where student_id=&#39;%s&#39;;&quot;,student_id);</b>
+<b class="fc">&nbsp;        ResultSet rs1=stmt.executeQuery(q2);</b>
+<b class="fc">&nbsp;        rs1.next();</b>
+<b class="fc">&nbsp;        if(rs1.getRow()==0){</b>
+<b class="fc">&nbsp;            System.out.println(&quot;This is first semester of Student!&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="fc">&nbsp;        while(rs1.next()){</b>
+<b class="nc">&nbsp;            System.out.print(&quot;Course_ID:&quot; + rs1.getString(&quot;course_id&quot;));</b>
+<b class="nc">&nbsp;            System.out.print(&quot;, Semester:&quot;+rs1.getString(&quot;sem&quot;));</b>
+<b class="nc">&nbsp;            System.out.print(&quot;, Year:&quot;+rs1.getString(&quot;curr_year&quot;));</b>
+<b class="nc">&nbsp;            System.out.print(&quot;, Credit:&quot;+rs1.getString(&quot;credit&quot;));</b>
+<b class="nc">&nbsp;            System.out.println(&quot;, Grade:&quot;+rs1.getString(&quot;grade&quot;));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        System.out.println(&quot;Student Record Successfully Open!&quot;);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-15 15:57</div>
+</div>
+</body>
+</html>
